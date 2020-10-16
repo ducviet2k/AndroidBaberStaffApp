@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txt_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:fontFamily="@font/bellerose"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="STAFF LOGIN"
+            android:textAppearance="@android:style/TextAppearance.Large"
+            android:textColor="@color/white" />
+        
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edt_User"
+
+            android:layout_width="match_parent"
+            android:layout_margin="8dp"
+            android:fontFamily="@font/bellerose"
+            android:hint="user"
+            android:layout_height="wrap_content"/>
+
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edt_password"
+            android:layout_width="match_parent"
+            android:layout_margin="8dp"
+            android:fontFamily="@font/bellerose"
+            android:hint="Password"
+           android:inputType="numberPassword"
+            android:layout_height="wrap_content"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:weightSum="4"
+        android:layout_marginBottom="10dp">
+
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/colorPrimaryDark"
+            android:textColor="@color/white"
+            android:layout_weight="2"
+            android:fontFamily="@font/bellerose"
+            android:layout_centerHorizontal="true"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"/>
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/colorPrimaryDark"
+            android:textColor="@color/white"
+            android:layout_weight="2"
+            android:fontFamily="@font/bellerose"
+            android:layout_centerHorizontal="true"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"/>
+
+    </LinearLayout>
+</LinearLayout>
