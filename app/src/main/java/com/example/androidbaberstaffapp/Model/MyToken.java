@@ -3,10 +3,33 @@ package com.example.androidbaberstaffapp.Model;
 import com.example.androidbaberstaffapp.Common.Common;
 
 public class MyToken {
-     private  String token,user;
-     private Common.TOKEN_TYPE tokentype;
+    private String userPhone;
+    private Common.TOKEN_TYPE tokenType;
+    private String token;
+
+    public MyToken(String userPhone, Common.TOKEN_TYPE tokenType, String token) {
+        this.userPhone = userPhone;
+        this.tokenType = tokenType;
+        this.token = token;
+    }
 
     public MyToken() {
+    }
+
+    public String getUserPhone() {
+        return userPhone;
+    }
+
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
+    }
+
+    public Common.TOKEN_TYPE getTokenType() {
+        return tokenType;
+    }
+
+    public void setTokenType(Common.TOKEN_TYPE tokenType) {
+        this.tokenType = tokenType;
     }
 
     public String getToken() {
@@ -15,21 +38,5 @@ public class MyToken {
 
     public void setToken(String token) {
         this.token = token;
-    }
-
-    public String getUser() {
-        return user;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
-
-    public Common.TOKEN_TYPE getTokentype() {
-        return tokentype;
-    }
-
-    public void setTokentype(Common.TOKEN_TYPE tokentype) {
-        this.tokentype = tokentype;
     }
 }

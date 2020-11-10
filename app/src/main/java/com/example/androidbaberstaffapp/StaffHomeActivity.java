@@ -22,7 +22,7 @@ import com.example.androidbaberstaffapp.Common.Common;
 import com.example.androidbaberstaffapp.Common.SpacesItemDecoration;
 import com.example.androidbaberstaffapp.Interface.INotificationCountListener;
 import com.example.androidbaberstaffapp.Interface.ITimeSlotLoadListener;
-import com.example.androidbaberstaffapp.Model.TimeSlot;
+import com.example.androidbaberstaffapp.Model.BookingInformation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -96,6 +96,13 @@ public class StaffHomeActivity extends AppCompatActivity implements ITimeSlotLoa
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+
+        //notification
+        if (item.getItemId() == R.id.action_new_notification) {
+           startActivity(new Intent(StaffHomeActivity.this,NotificationActivity.class));
+           txt_notification_badge.setText("");
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -214,9 +221,9 @@ public class StaffHomeActivity extends AppCompatActivity implements ITimeSlotLoa
                                     if (querySnapshot.isEmpty())
                                         iTimeSlotLoadListener.onTimeSlotLoadEmpty();
                                     else {
-                                        List<TimeSlot> timeSlots = new ArrayList<>();
+                                        List<BookingInformation> timeSlots = new ArrayList<>();
                                         for (QueryDocumentSnapshot document : task.getResult())
-                                            timeSlots.add(document.toObject(TimeSlot.class));
+                                            timeSlots.add(document.toObject(BookingInformation.class));
                                         iTimeSlotLoadListener.onTimeSlotLoadSuccess(timeSlots);
                                     }
                                 }
@@ -272,6 +279,7 @@ public class StaffHomeActivity extends AppCompatActivity implements ITimeSlotLoa
 
     }
 
+
     //notification
     private void initNotificationRealTimeUpdate() {
         notificationCollection = FirebaseFirestore.getInstance()
@@ -315,7 +323,7 @@ public class StaffHomeActivity extends AppCompatActivity implements ITimeSlotLoa
     }
 
     @Override
-    public void onTimeSlotLoadSuccess(List<TimeSlot> timeSlot) {
+    public void onTimeSlotLoadSuccess(List<BookingInformation> timeSlot) {
         MyTimeSlotAdapter adapter = new MyTimeSlotAdapter(this, timeSlot);
         recycler_time_slot.setAdapter(adapter);
 

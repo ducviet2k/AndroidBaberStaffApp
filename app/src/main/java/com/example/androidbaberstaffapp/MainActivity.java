@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,6 +31,11 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,60 +63,78 @@ public class MainActivity extends AppCompatActivity implements IOAllStateLoadLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        FirebaseInstanceId.getInstance()
-                .getInstanceId()
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                          Toast.makeText(MainActivity.this,e.getMessage(),Toast.LENGTH_SHORT).show();
-                    }
+        Dexter.withActivity(this)
+                .withPermissions(new String[]{
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.CAMERA,
                 })
-                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                .withListener(new MultiplePermissionsListener() {
                     @Override
-                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                         if (task.isSuccessful() )
-                         {
-                                   Common.updateToken(MainActivity.this,
-                                           task.getResult().getToken()
-                                           );
-                                   Log.d("EDMTOKen",task.getResult().getToken() );
-                         }
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        FirebaseInstanceId.getInstance()
+                                .getInstanceId()
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                })
+                                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                                        if (task.isSuccessful()) {
+                                            Common.updateToken(MainActivity.this,
+                                                    task.getResult().getToken()
+                                            );
+                                            Log.d("Tokens", task.getResult().getToken());//EDMTOKen
+                                        }
+                                    }
+                                });
+
+                        Paper.init(MainActivity.this);
+                        String user = Paper.book().read(Common.LOGGER_KEY);
+                        if (TextUtils.isEmpty(user)) //if user not login
+                        {
+                            setContentView(R.layout.activity_main);
+
+                            ButterKnife.bind(MainActivity.this);
+
+                            initView();
+
+                            init();
+
+                            loadAllStateFromFireStore();
+                        } else // user ready login
+                        {
+                            //Autu login start
+                            Gson gson = new Gson();
+                            Common.state_name = Paper.book().read(Common.STATE_KEY);
+                            Common.selected_salon = gson.fromJson(Paper.book().read(Common.SALON_KEY, ""),
+                                    new TypeToken<Salon>() {
+                                    }.getType());
+
+                            Common.currentBarber = gson.fromJson(Paper.book().read(Common.SALON_KEY, ""),
+                                    new TypeToken<Barber>() {
+                                    }.getType());
+
+                            //chuyene
+                            Intent intent = new Intent(MainActivity.this, StaffHomeActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                            finish();
+
+                        }
                     }
-                });
 
-        Paper.init(this);
-        String user = Paper.book().read(Common.LOGGER_KEY);
-        if (TextUtils.isEmpty(user)) //if user not login
-        {
-            setContentView(R.layout.activity_main);
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
 
-            ButterKnife.bind(this);
+                    }
+                }).check();
 
-            initView();
 
-            init();
-
-            loadAllStateFromFireStore();
-        }
-        else // user ready login
-        {
-            //Autu login start
-            Gson gson = new Gson();
-            Common.state_name = Paper.book().read(Common.STATE_KEY);
-            Common.selected_salon= gson.fromJson(Paper.book().read(Common.SALON_KEY,""),
-                    new TypeToken<Salon>(){}.getType());
-
-            Common.currentBarber= gson.fromJson(Paper.book().read(Common.SALON_KEY,""),
-                    new TypeToken<Barber>(){}.getType());
-
-            //chuyene
-            Intent intent = new Intent(this,StaffHomeActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            finish();
-
-        }
 
 
     }
@@ -127,11 +151,9 @@ public class MainActivity extends AppCompatActivity implements IOAllStateLoadLis
                 }).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful())
-                {
+                if (task.isSuccessful()) {
                     List<City> cities = new ArrayList<>();
-                    for (DocumentSnapshot citySnapShop:task.getResult())
-                    {
+                    for (DocumentSnapshot citySnapShop : task.getResult()) {
                         City city = citySnapShop.toObject(City.class);
                         cities.add(city);
                     }
@@ -156,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements IOAllStateLoadLis
 
     @Override
     public void onAllStateLoadSuccess(List<City> cityList) {
-        adapter = new MyStateAdapter(this,cityList);
+        adapter = new MyStateAdapter(this, cityList);
         recycler_state.setAdapter(adapter);
 
         dialog.dismiss();
