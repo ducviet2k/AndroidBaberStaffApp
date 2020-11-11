@@ -243,61 +243,7 @@ public class TotalPriceFragment extends BottomSheetDialogFragment {
                         });
             }
         });
-//        btn_confirm.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                dialog.show();
-//                ///AllSalon/HaNoi/Branch/69yELSVrUXtMOZeO7gZ6/Services
-//
-//                DocumentReference bookingSet = FirebaseFirestore.getInstance()
-//                        .collection("AllSalon")
-//                        .document(Common.state_name)
-//                        .collection("Branch")
-//                        .document(Common.currentBarber.getBarberId())
-//                        .collection("Barbers")
-//                        .document(Common.currentBarber.getBarberId())
-//                        .collection(Common.simpleDateFormat.format(Common.bookingDate.getTime()))
-//                        .document(Common.currentBookinginformation.getBookingId());
-////part25
-//                bookingSet
-//                        .get()
-//                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                            @Override
-//                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                                if (task.isSuccessful()) {
-//                                    if (task.getResult().exists()) {
-//                                        //update
-//                                        Map<String, Object> dataUpdate = new HashMap<>();
-//                                        dataUpdate.put("done", true);
-//                                        bookingSet.update(dataUpdate)
-//                                                .addOnFailureListener(new OnFailureListener() {
-//                                                    @Override
-//                                                    public void onFailure(@NonNull Exception e) {
-//                                                        dialog.dismiss();
-//                                                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-//                                                    }
-//                                                }).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                            @Override
-//                                            public void onComplete(@NonNull Task<Void> task) {
-//                                                if (task.isSuccessful()) {
-//                                                    createInvoice();
-//                                                }
-//                                            }
-//                                        });
-//
-//                                    }
-//                                }
-//                            }
-//                        }).addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        dialog.dismiss();
-//                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//
-//            }
-//        });
+
     }
 
     //prart 25
@@ -369,6 +315,12 @@ public class TotalPriceFragment extends BottomSheetDialogFragment {
                             FCMSenData fcmSenData = new FCMSenData();
                             Map<String, String> dataSend = new HashMap<>();
                             dataSend.put("update_done", "true");
+                            //infomation need  for
+                            dataSend.put(Common.RATING_STATE_KEY,Common.state_name);
+                            dataSend.put(Common.RATING_SALON_ID,Common.selected_salon.getSalonId());
+                            dataSend.put(Common.RATING_SALON_NAME,Common.selected_salon.getName());
+                            dataSend.put(Common.RATING_BARBER_ID,Common.currentBarber.getBarberId());
+
 
                             fcmSenData.setTo(myToken.getToken());
                             fcmSenData.setData(dataSend);
