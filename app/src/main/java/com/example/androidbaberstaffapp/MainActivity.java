@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements IOAllStateLoadLis
                                     new TypeToken<Salon>() {
                                     }.getType());
 
-                            Common.currentBarber = gson.fromJson(Paper.book().read(Common.SALON_KEY, ""),
+                            Common.currentBarber = gson.fromJson(Paper.book().read(Common.BARBER_KEY, ""),
                                     new TypeToken<Barber>() {
                                     }.getType());
 

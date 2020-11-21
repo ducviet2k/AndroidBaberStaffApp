@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.OpenableColumns;
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -33,30 +34,30 @@ import java.util.Calendar;
 import io.paperdb.Paper;
 
 public class Common {
-    public static final Object DISABLE_TAG ="DI" ;
+    public static final Object DISABLE_TAG = "DI";
     public static final int TIME_SLOT_T0TAL = 20;
-    public static final String LOGGER_KEY ="LOGGER" ;
-    public static final String STATE_KEY ="" ;
+    public static final String LOGGER_KEY = "LOGGER";
+    public static final String STATE_KEY = "";
     public static final String SALON_KEY = "SALON";
-    public static final String BARBER_KEY = "BARBER" ;
+    public static final String BARBER_KEY = "BARBER";
     public static final String TITLE_KEY = "title";
-    public static final String CONTENT_KEY = "content" ;
+    public static final String CONTENT_KEY = "content";
     public static final int MAX_NOTIFICATION_PER_LOAD = 10;
     public static final String SERVICES_ADDED = "SERVICES_ADDED";
     public static final double DEFAULT_PRICE = 30;
-    public static final String MONEY_SIGN ="$" ;
+    public static final String MONEY_SIGN = "$";
     public static final String SHOPPING_LIST = "SHOPPING_LIST_ITEMS";
-    public static final String IMAGE_DOWNLOADABLE_URL ="DOWNLOADABLE_URL" ;
+    public static final String IMAGE_DOWNLOADABLE_URL = "DOWNLOADABLE_URL";
 
     //SAO
-    public static final String RATING_STATE_KEY ="RATING_STATE" ;
+    public static final String RATING_STATE_KEY = "RATING_STATE";
     public static final String RATING_SALON_ID = "RATING_SALON_ID";
-    public static final String RATING_SALON_NAME ="RATING_SALON_NAME" ;
+    public static final String RATING_SALON_NAME = "RATING_SALON_NAME";
     public static final String RATING_BARBER_ID = "RATING_BARBER_ID";
 
 
-    public  static String state_name="";
-//    public static Salon selectdSalon;
+    public static String state_name = "";
+    //    public static Salon selectdSalon;
     public static Barber currentBarber;
     public static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd_MM_yyyy");
     public static Calendar bookingDate = Calendar.getInstance();
@@ -65,7 +66,7 @@ public class Common {
 
 
     public static String convertTimeSlotToString(int slot) {
-        switch (slot){
+        switch (slot) {
             case 0:
                 return "9:00-9:30";
             case 1:
@@ -113,73 +114,69 @@ public class Common {
 
     public static void showNotification(Context context, int notification_id, String title, String content, Intent intent) {
         PendingIntent pendingIntent = null;
-        if (intent != null)
-             {
-                 pendingIntent = PendingIntent.getActivity(context,
-                         notification_id,
-                         intent,
-                         PendingIntent.FLAG_UPDATE_CURRENT
-                         );
-                 String NOTIFICATION_CHANNEL_ID = "edmt_barber_booking_channel_01";
-                 NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                     {
-                         NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID,
-                                    "EDMT Bsrber  Booking Staff App",NotificationManager.IMPORTANCE_DEFAULT
-                                 );
+        if (intent != null) {
+            pendingIntent = PendingIntent.getActivity(context,
+                    notification_id,
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT
+            );
+            String NOTIFICATION_CHANNEL_ID = "edmt_barber_booking_channel_01";
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID,
+                        "EDMT Bsrber  Booking Staff App", NotificationManager.IMPORTANCE_DEFAULT
+                );
 
-                         notificationChannel.setDescription("Staff App");
-                         notificationChannel.enableLights(true);
-                         notificationChannel.enableVibration(true);
+                notificationChannel.setDescription("Staff App");
+                notificationChannel.enableLights(true);
+                notificationChannel.enableVibration(true);
 
-                         notificationManager.createNotificationChannel(notificationChannel);
-                     }
-                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context,NOTIFICATION_CHANNEL_ID);
+                notificationManager.createNotificationChannel(notificationChannel);
+            }
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID);
 
-                 builder.setContentTitle(title)
-                         .setContentText(content)
-                         .setAutoCancel(false)
-                         .setSmallIcon(R.mipmap.ic_launcher)
-                         .setLargeIcon(BitmapFactory.decodeResource(context.getResources(),R.mipmap.ic_launcher));
+            builder.setContentTitle(title)
+                    .setContentText(content)
+                    .setAutoCancel(false)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher));
 
-                  if (pendingIntent != null)
-                      builder.setContentIntent(pendingIntent);
-                  Notification notification = builder.build();
-                  notificationManager.notify(notification_id,notification);
-             }
+            if (pendingIntent != null)
+                builder.setContentIntent(pendingIntent);
+            Notification notification = builder.build();
+            notificationManager.notify(notification_id, notification);
+        }
     }
 
     public static String formatShoppingItemName(String name) {
-        return name.length()>13 ? new StringBuilder(name.substring(0,10)).append("...").toString():name;
+        return name.length() > 13 ? new StringBuilder(name.substring(0, 10)).append("...").toString() : name;
     }
 
     //upload Image firebase
     public static String getFileName(ContentResolver contentResolver, Uri fileUri) {
         String result = null;
-        if (fileUri.getScheme().equals("content"))
-        {
-            Cursor cursor = contentResolver.query(fileUri,null,null,null,null);
+        if (fileUri.getScheme().equals("content")) {
+            Cursor cursor = contentResolver.query(fileUri, null, null, null, null);
             try {
                 if (cursor != null && cursor.moveToFirst())
-                    result= cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-            }finally {
+                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+            } finally {
                 cursor.close();
             }
         }
-        if (result == null)
-        {
+        if (result == null) {
             result = fileUri.getPath();
             int cut = result.lastIndexOf('/');
             if (cut != -1)
-                result = result.substring(cut+1);
+                result = result.substring(cut + 1);
 
         }
-        return  result;
+        return result;
 
     }
 
 
-    public enum  TOKEN_TYPE{
+    public static enum TOKEN_TYPE {
         CLIENT,
         BARBER,
         MANAGER
@@ -189,27 +186,28 @@ public class Common {
 
         Paper.init(context);
         String user = Paper.book().read(Common.LOGGER_KEY);
-        if (user != null)
-        {
-            if (!TextUtils.isEmpty(user))
-                {
-                    MyToken myToken = new MyToken();
-                    myToken.setToken(s);
-                    myToken.setTokenType(TOKEN_TYPE.BARBER);
-                    myToken.setUserPhone(user);
+        //   String user = "DucViet";
 
-                    FirebaseFirestore.getInstance()
-                            .collection("Tokens")
-                            .document(user)
-                            .set(myToken)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
+        if (user != null) {
+            if (!TextUtils.isEmpty(user)) {
 
-                                }
-                            });
+                MyToken myToken = new MyToken();
+                myToken.setToken(s);
+                myToken.setTokenType(TOKEN_TYPE.BARBER);
+                myToken.setUserPhone(user);
 
-                }
+                FirebaseFirestore.getInstance()
+                        .collection("Tokens")
+                        .document(user)
+                        .set(myToken)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+
+                            }
+                        });
+
+            }
         }
     }
 

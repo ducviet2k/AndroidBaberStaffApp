@@ -20,10 +20,13 @@ import butterknife.ButterKnife;
 public class CustomLoginDialog {
     @BindView(R.id.txt_title)
     TextView txt_title;
+
     @BindView(R.id.edt_User)
-    TextInputEditText edt_user;
+    TextInputEditText edt_User;
+
     @BindView(R.id.edt_password)
     TextInputEditText edt_password;
+
     @BindView(R.id.btn_login)
     Button btn_login;
     @BindView(R.id.btn_cancel)
@@ -70,7 +73,7 @@ public class CustomLoginDialog {
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                iDialogClickListener.onClickPositiveButton(dialog, edt_user.getText().toString(),
+                iDialogClickListener.onClickPositiveButton(dialog, edt_User.getText().toString(),
                         edt_password.getText().toString());
 
             }

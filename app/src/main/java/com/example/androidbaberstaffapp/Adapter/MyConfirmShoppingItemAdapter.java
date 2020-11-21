@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.androidbaberstaffapp.Model.CartItem;
 import com.example.androidbaberstaffapp.Model.ShoppingItem;
 import com.example.androidbaberstaffapp.R;
 import com.squareup.picasso.Picasso;
@@ -22,9 +23,9 @@ import butterknife.ButterKnife;
 public class MyConfirmShoppingItemAdapter extends RecyclerView.Adapter<MyConfirmShoppingItemAdapter.MyViewHolder> {
 
     Context context;
-    List<ShoppingItem>shoppingItemList;
+    List<CartItem>shoppingItemList;
 
-    public MyConfirmShoppingItemAdapter(Context context, List<ShoppingItem> shoppingItemList) {
+    public MyConfirmShoppingItemAdapter(Context context, List<CartItem> shoppingItemList) {
         this.context = context;
         this.shoppingItemList = shoppingItemList;
     }
@@ -40,9 +41,11 @@ public class MyConfirmShoppingItemAdapter extends RecyclerView.Adapter<MyConfirm
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i ) {
        Picasso.get()
-               .load(shoppingItemList.get(i).getImage())
+               .load(shoppingItemList.get(i).getProductImage())
                .into(myViewHolder.item_image);
-       myViewHolder.txt_name.setText(shoppingItemList.get(i).getName());
+       myViewHolder.txt_name.setText(new StringBuilder(shoppingItemList.get(i).getProductName())
+       .append(" x")
+       .append(shoppingItemList.get(i).getProductQuantity()));
 
     }
 

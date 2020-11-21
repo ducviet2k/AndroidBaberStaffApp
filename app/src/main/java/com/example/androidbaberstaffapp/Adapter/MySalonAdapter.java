@@ -97,7 +97,7 @@ public class MySalonAdapter extends RecyclerView.Adapter<MySalonAdapter.MyViewHo
     }
 
     @Override
-    public void onClickPositiveButton(DialogInterface dialogInterface, String userName, String password) {
+    public void onClickPositiveButton(DialogInterface dialogInterface, String user, String password) {
         AlertDialog loading = new SpotsDialog.Builder().setCancelable(false)
                 .setContext(context).build();
 
@@ -110,7 +110,7 @@ public class MySalonAdapter extends RecyclerView.Adapter<MySalonAdapter.MyViewHo
                 .collection("Branch")
                 .document(Common.selected_salon.getSalonId())
                 .collection("Barbers")
-                .whereEqualTo("username", userName)
+                .whereEqualTo("username", user)
                 .whereEqualTo("password", password)
                 .limit(1)
                 .get()
@@ -131,7 +131,7 @@ public class MySalonAdapter extends RecyclerView.Adapter<MySalonAdapter.MyViewHo
 
                                 loading.dismiss();
 
-                                iUserLoginRemeberListener.onUserLoginSuccess(userName);
+                                iUserLoginRemeberListener.onUserLoginSuccess(user);
 
                                 //create Barber
                                 Barber barber = new Barber();
@@ -149,7 +149,7 @@ public class MySalonAdapter extends RecyclerView.Adapter<MySalonAdapter.MyViewHo
                                 context.startActivity(staffHome);
                             } else {
                                 loading.dismiss();
-                                Toast.makeText(context, "nhap user/pass", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "Vui lòng nhập lại thông tin !", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }

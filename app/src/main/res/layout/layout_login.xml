@@ -25,7 +25,6 @@
         
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edt_User"
-
             android:layout_width="match_parent"
             android:layout_margin="8dp"
             android:fontFamily="@font/bellerose"
